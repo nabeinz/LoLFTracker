@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block Title %}
+LO LF Tracker
+{% endblock %}
+
+{% block Body %}
+<div class="container">
+   <div class="jumbotron p-3">
+      <center>
+         <h1>&nbsp;&nbsp;LO-LF Tracker | BWU1</h1>
+      </center>
+   </div>
+   <section class="forms-section" >
+      <div class="forms">
+         <div class="form-wrapper is-active">
+            <button type="button" class="switcher switcher-login">
+            Check In
+            <span class="underline"></span>
+            </button>
+            <form class="form form-login" action="{{url_for('checkin')}}" method="POST">
+                <br>
+               <fieldset>
+                  <div class="input-block" >
+                     <label for="badge_barcode_id">Badge ID</label>
+                     <input  type="number" class="float-right" id="badge_barcode_id" name="badge_barcode_id" placeholder="Scan your badge" required required style="width:60%;" autofocus><br>
+                  </div>
+                  <br><br>
+                  <div class="input-block">
+                     <label for="lo">Select Function</label>
+                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <input type="radio" class="option-input radio" id="lo" name="lolf" value="LO" required />  <label for="lo">LO</label>
+                     &nbsp;&nbsp;&nbsp; <input type="radio" class="option-input radio" id="lf" name="lolf" value="LO" required /> <label for="lo">LF</label>
+                  </div>
+               </fieldset>
+               <button type="submit" class="btn-login"><span>Check In</span> <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+               <br>
+               {% with messages = get_flashed_messages() %}
+               {% if messages %}
+               {% for message in messages %}
+               <div class="alert alert-success alert-dismissable" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                  <span aria-hidden="true">x</span>
+                  </button>
+                  {{message}}
+               </div>
+               {% endfor %}
+               {% endif %}
+               {% endwith %}
+            </form>
+         </div>
+         <div class="form-wrapper">
+            <button type="button" class="switcher switcher-signup">
+            Options
+            <span class="underline"></span>
+            </button>
+            <form class="form form-signup">
+               <fieldset>
+                  <div class="input-block">
+                     <button type="button" class="btn-signup" data-toggle="modal" data-target="#mymodal">Report <i class="fa fa-file" aria-hidden="true"></i></button><br/><br/>
+                     <button type="button" class="btn-signup" data-toggle="modal" data-target="#addmymodal"> Add Users <i class="fa fa-user-plus"></i></button><br/>
+                  </div>
+               </fieldset>
+            </form>
+         </div>
+      </div>
+   </section>
+
+    <!-- Script for div Slider form to menu -->
+   <script>
+      const switchers = [...document.querySelectorAll('.switcher')]
+
+      switchers.forEach(item => {
+      	item.addEventListener('click', function() {
+      		switchers.forEach(item => item.parentElement.classList.remove('is-active'))
+      		this.parentElement.classList.add('is-active')
+      	})
+      })
+
+   </script>
+</div>
+</div>
+<!-- Modal For Downloading The report-->
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Download Check-In Assocaited</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form action="{{url_for('fetch')}}" method="POST" class="form-inline">
+               <div class="input-block" >
+                  <!-- Date input -->
+                   <label for="start" style="font-size:18px;">Start Date: </label> <input type="date"  id="start" name="start" style="font-size:18px;line-height:15px;" autofocus/>
+               </div>
+                <hr/>
+               <div class="input-block">
+                  <!-- Date input -->
+                   <label for="end" style="font-size:18px;">End Date: </label><input type="date" id="end" name="end" style="font-size:18px;line-height:15px;"/>
+               </div>
+
+               <div class="form-group">
+                   <p style="color:red"> *Note: Please do not select any date for  downloading <br/>all checked in records.*</p>
+               </div>
+         </div>
+         <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-primary" >Show</button>
+         </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal for adding User into Database-->
+<div class="modal fade" id="addmymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addingUser">Add new Associates</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form action="{{url_for('add_user')}}" method="POST">
+               <div class="input-block">
+                   <label for="employee_id" style="font-size:18px;">Employee ID: </label><input class="float-right" type="number" id="employee_id" name="employee_id" style="font-size:24px;line-height:32px;width:60%;" required>
+               </div>
+               <div class="input-block">
+                   <label for="employee_id" style="font-size:18px;">Badge Barcode ID: </label><input class="float-right" type="number" name="add_badge_barcode_id" style="font-size:24px;line-height:32px;width:60%;" required>
+               </div>
+               <div class="input-block">
+                   <label for="employee_id" style="font-size:18px;">Employee Name: </label><input class="float-right" type="text" name="employee_name" style="font-size:24px;line-height:32px;width:60%;" required>
+               </div>
+               <div class="input-block ">
+                   <label for="employee_id" style="font-size:18px;">Amazon ID: </label><input type="text" class="float-right" name="amazon_id" style="font-size:24px;line-height:32px;width:60%;" required>
+               </div>
+         </div>
+         <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="submit" class="btn btn-primary" >Submit</button>
+         </form>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+
+{% block Title %}
+LO LF Tracker
+{% endblock %}
+
+{% block Body %}
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+ <center><h3>LO LF CHECK-IN REPORTS</h3></center>
+            <div class="jumbotron p-3">
+
+ <table class="table table-hover table-dark">
+
+                    <tr>
+                        <th>S/N</th>
+                        <th>BADGE ID</th>
+                        <th>EMPLOYEE NAME</th>
+                        <th>USER ID</th>
+                        <th>DATE</th>
+                        <th>FUNCTION</th>
+
+                    </tr>
+
+
+                   {% for row in data %}
+                    <tr>
+                         <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[5]}}</td>
+                    </tr>
+
+
+                    {% endfor %}
+
+
+ </table>
+            </div>
+            <p>
+	<a href="{{ url_for('.download') }}">Generate CSV Report</a>
+</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
